@@ -1,0 +1,40 @@
+{
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "types": [
+      "react",
+      "react-dom",
+      "@types/react"
+    ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "deno.ns"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "unstable": [
+    "bare-node-builtins",
+    "detect-cjs",
+    "node-globals",
+    "unsafe-proto",
+    "sloppy-imports"
+  ],
+  "imports": {
+    "@/components/": "./src/components/",
+    "react": "npm:react",
+    "@types/react": "npm:@types/react"
+  },
+  "fmt": {
+    "include": [
+      "./src"
+    ]
+  },
+  "lint": {
+    "include": [
+      "./src"
+    ]
+  },
+  "lock": false
+}
