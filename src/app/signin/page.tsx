@@ -3,13 +3,9 @@
 import Link from "next/link";
 import Modal from "@/components/modal.tsx";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function SignIn() {
   const [agreementOpen, setAgreementOpen] = useState(false);
-
-  const router = useRouter();
-  router.prefetch("/signin-success");
 
   return (
     <div
