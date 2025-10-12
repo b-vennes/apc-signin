@@ -9,7 +9,7 @@
 # https://github.com/docker/awesome-compose
 services:
   app:
-    image: bvennes/apc-signin-app
+    image: bvennes/apc-signin-app-amd64
   web:
     image: nginx
     volumes:
