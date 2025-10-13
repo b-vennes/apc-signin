@@ -42,3 +42,8 @@ next-env.d.ts
 
 # Next.js
 .next
+
+# Scala CLI
+**/.bsp
+**/.metals
+**/.scala-build

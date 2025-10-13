@@ -2,6 +2,7 @@ services:
   proxy:
     image: caddy
     ports:
+      - 80:80
       - 443:443
     volumes:
       - $PWD/caddy/live:/etc/caddy

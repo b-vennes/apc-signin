@@ -1,3 +1,7 @@
-signinapc.app
+signinapc.app {
+  reverse_proxy app:3000
+}
 
-reverse_proxy app:3000
+www.signinapc.app {
+  reverse_proxy app:3000
+}
