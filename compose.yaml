@@ -3,6 +3,7 @@ services:
     image: caddy
     ports:
       - 80:80
+      - 443:443
       - 2019:2019
       - 2015:2015
     environment:
@@ -10,4 +11,8 @@ services:
     volumes:
       - $PWD/caddy/dev:/etc/caddy
   app:
-    image: bvennes/apc-signin-app-arm64
+    image: bvennes/apc-signin-app-amd64
+  api:
+    image: bvennes/apc-signin-api-amd64
+    volumes:
+      - $PWD/test.db:/app/api.db

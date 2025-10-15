@@ -29,7 +29,7 @@ func MakeSqliteEventService(db *sql.DB, ids events.IDs) EventService {
 func (s sqliteEventService) Persist(event events.Event) (bool, error) {
 	meta := event.Meta(s.ids)
 	body := event.Body()
-	fmt.Printf("Persisting event %s to stream %s at sequence %d\n", body, meta.Stream, meta.SequenceNum)
+	log.Printf("Persisting event %s to stream %s at sequence %d\n", body, meta.Stream, meta.SequenceNum)
 
 	insertQuery := fmt.Sprintf(
 		"INSERT INTO events(streamID, type, sequence, body) SELECT '%s', '%s', %d, '%s' WHERE NOT EXISTS(SELECT 1 FROM events WHERE streamID = '%s' AND sequence = %d)", meta.Stream,

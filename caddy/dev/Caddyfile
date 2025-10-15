@@ -1,3 +1,4 @@
 localhost {
   reverse_proxy app:3000
+  reverse_proxy "/api/*" api:3339
 }

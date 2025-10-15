@@ -23,7 +23,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	db, err := sql.Open("sqlite", "./test.db")
+	db, err := sql.Open("sqlite", "./api.db")
 
 	if err != nil {
 		fmt.Println("Failed to open database:", err.Error())

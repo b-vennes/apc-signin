@@ -69,7 +69,7 @@ func (m memberSignInRequest) Validate() error {
 type memberSignInResponse struct{}
 
 func (memberSignIn) Path() string {
-	return "/member/signin"
+	return "/api/member/signin"
 }
 
 func (m memberSignIn) Handle(w http.ResponseWriter, r *http.Request) {
@@ -162,7 +162,7 @@ func (m memberAgreedRequest) Validate() error {
 }
 
 func (memberAgreed) Path() string {
-	return "/member/agreed"
+	return "/api/member/agreed"
 }
 
 func (m memberAgreed) Handle(w http.ResponseWriter, r *http.Request) {
