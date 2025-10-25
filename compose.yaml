@@ -4,15 +4,13 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 2019:2019
-      - 2015:2015
-    environment:
-      - CADDY_ADMIN=0.0.0.0:2019
     volumes:
-      - $PWD/caddy/dev:/etc/caddy
+      - $CADDY:/etc/caddy
   app:
-    image: bvennes/apc-signin-app-amd64
+    build:
+      dockerfile: ./docker/app/Dockerfile
   api:
-    image: bvennes/apc-signin-api-amd64
+    build:
+      dockerfile: ./docker/api/Dockerfile
     volumes:
-      - $PWD/test.db:/app/api.db
+      - $DB_FILE:/app/api.db

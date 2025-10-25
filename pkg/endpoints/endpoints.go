@@ -166,7 +166,7 @@ func (memberAgreed) Path() string {
 }
 
 func (m memberAgreed) Handle(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		http.NotFound(w, r)
 		return
 	}

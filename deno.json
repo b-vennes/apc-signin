@@ -22,7 +22,7 @@
     "sloppy-imports"
   ],
   "imports": {
-    "@/components/": "./src/components/",
+    "@/": "./src/"
     "react": "npm:react",
     "@types/react": "npm:@types/react"
   },

@@ -2,18 +2,39 @@
 
 import Link from "next/link";
 import Modal from "@/components/modal.tsx";
+import { AgreementBlock } from "@/components/agreement-block.tsx";
 import { FormEvent, useState } from "react";
+import {
+  AgreementCompleted,
+  AgreementNeeded,
+  AgreementState,
+  AlreadyAgreed,
+  useAgreement,
+} from "@/lib/agreements.ts";
+import { Debounce, useDebouncing } from "@/lib/debouncing.ts";
+import { memberAgreed } from "@/app/actions.ts";
 
 function getInputText(event: FormEvent<HTMLInputElement>): string {
   return (event.target as unknown as { value: string }).value;
 }
 
-function getInputCheckbox(
-  event: unknown,
-): boolean {
-  const eventWithChecked = event as { target: { checked: boolean } };
+function updateAgreementState(
+  update: (value: AgreementState) => void,
+  debouncing: Debounce,
+  name: string,
+  email: string,
+) {
+  async function checkPersonAgreed() {
+    console.log(`Name: ${name}`);
+    console.log(`Email: ${email}`);
+    const agreed = await memberAgreed(name, email);
 
-  return eventWithChecked?.target?.checked ?? false;
+    console.log("Member agreed already? " + agreed);
+
+    agreed ? update(AlreadyAgreed) : update(AgreementNeeded);
+  }
+
+  debouncing.reset(checkPersonAgreed);
 }
 
 export default function SignIn() {
@@ -21,13 +42,18 @@ export default function SignIn() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [agreed, setAgreed] = useState(false);
+
+  // TODO implement agreement needed
+  // this could all be one state with multiple pieces
+  const [agreementState, setAgreementState] = useAgreement();
+
+  const checkAgreeDebouncing = useDebouncing(500);
 
   const submitEnabled = name &&
     name !== "" &&
     email &&
     email !== "" &&
-    agreed;
+    (agreementState === AgreementCompleted || agreementState === AlreadyAgreed);
 
   return (
     <div
@@ -53,7 +79,16 @@ export default function SignIn() {
             type="text"
             className="border-2 rounded-sm md:w-1/2 px-2 py-1"
             placeholder="Keith Elwin"
-            onInput={(input) => setName(getInputText(input))}
+            onInput={(input) => {
+              const newName = getInputText(input);
+              setName(newName);
+              updateAgreementState(
+                setAgreementState,
+                checkAgreeDebouncing,
+                newName,
+                email,
+              );
+            }}
           />
           <label id="email-label">Email</label>
           <input
@@ -61,42 +96,29 @@ export default function SignIn() {
             type="email"
             className="border-2 rounded-sm md:w-1/2 px-2 py-1"
             placeholder="keith.elwin@hotmail.com"
-            onInput={(input) => setEmail(getInputText(input))}
+            onInput={(input) => {
+              const newEmail = getInputText(input);
+              setEmail(getInputText(input));
+              updateAgreementState(
+                setAgreementState,
+                checkAgreeDebouncing,
+                name,
+                newEmail,
+              );
+            }}
           />
         </div>
-        <div
-          id="member-agreement-info"
-          className="flex flex-col items-start"
-        >
-          <div
-            id="member-agreement-info"
-            className="flex flex-row justify-between gap-4"
-          >
-            <p id="member-agreement-title">Member Agreement</p>
-            <button
-              type="button"
-              id="view-agreement-button"
-              className="not-active:border-l-1 bg-amber-100 border-amber-400 rounded-sm px-4 py-1 hover:cursor-pointer hover:bg-amber-200"
-              onClick={() => setAgreementOpen(true)}
-            >
-              View
-            </button>
-          </div>
-          <div className="flex flex-row gap-1">
-            <input
-              id="member-agreement-checkbox"
-              type="checkbox"
-              onClick={(event) => setAgreed(getInputCheckbox(event))}
+        {agreementState === AlreadyAgreed
+          ? <div>Welcome Back!</div>
+          : (
+            <AgreementBlock
+              onOpenAgreement={() => setAgreementOpen(true)}
+              onCheckboxChange={(checked: boolean) =>
+                checked
+                  ? setAgreementState(AgreementCompleted)
+                  : setAgreementState(AgreementNeeded)}
             />
-            <label
-              id="agree-checkbox"
-              className="text-sm"
-            >
-              I agree to the rules of the Austin Pinball Collective space set
-              forth in the Austin Pinball Collective Member Agreement
-            </label>
-          </div>
-        </div>
+          )}
         <div>
           {submitEnabled
             ? (
